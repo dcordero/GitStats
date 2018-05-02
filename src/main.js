@@ -11,7 +11,7 @@ function createWindow () {
     window = new BrowserWindow({
         width: 1400,
         height: 800,
-        frame: false
+        frame: true
     });
 
     window.loadURL(url.format({

@@ -8,28 +8,10 @@ document.getElementById('close').addEventListener('click', function () {
     window.close();
 });
 
-const context = document.getElementById('graph');
-const data = {
-    type: 'line',
-    data : {
-        labels: [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: [
-            {
-                label: 'My First Dataset',
-                data: [65, 59, 80, 81, 56, 55, 40],
-                fill: false,
-                borderColor: 'rgb(75, 192, 192)',
-                lineTension: 0.1
-            }
-        ]
-    },
-    options: {}
-};
-new Chart(context, data);
 
-gitLog();
+refreshData();
 
-function gitLog() {
+function refreshData() {
 
     const { spawn } = require('child_process');
     const command = '--git-dir ' + repoPath + '.git --work-tree ' + repoPath + ' log --no-merges --shortstat --reverse --pretty=format:\'%an%n%cd\'';
@@ -48,8 +30,69 @@ function gitLog() {
       
     child.on('close', function () {
         const parsedGitStatsLogs = parseGitStatsLog(log);
-        console.log(parsedGitStatsLogs);
+        const data = composeData(parsedGitStatsLogs);
+        updateUIWithData(data);
     });
+}
+
+function updateUIWithData(data) {
+    console.log(data);
+
+    const context = document.getElementById('graph');
+    const chartData = {
+        type: 'line',
+        data : {
+            datasets: [
+                {
+                    label: 'Timeline',
+                    data: data
+                }
+            ],
+            fill: true
+        },
+        options: {
+            responsive: true,
+            title:{
+                display: true,
+                text: 'Number of lines of code'
+            },
+            scales: {
+                xAxes: [{
+                    type: 'time',
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Number of lines of code'
+                    }
+                }]
+            }
+        }
+    };
+
+    new Chart(context, chartData);
+}
+
+function composeData(parsedGitStatsLogs) {
+    let data =[];
+    let numberOfLinesOfCode = 0;
+    for (let i = 0; i < parsedGitStatsLogs.length; i++) {
+        const currentGitStatLog = parsedGitStatsLogs[i];
+
+        numberOfLinesOfCode += (currentGitStatLog.insertions - currentGitStatLog.deletions);
+
+        data.push({
+            x: currentGitStatLog.date,
+            y: numberOfLinesOfCode
+        });
+    }
+    return data;
 }
 
 function parseGitStatsLog(log) {
@@ -64,7 +107,7 @@ function parseGitStatsLog(log) {
 
         gitStatsLogs.push({
             name: paragraphObject.name,
-            date: paragraphObject.date,
+            date: Date.parse(paragraphObject.date),
             insertions: diffObject.insertions,
             deletions: diffObject.deletions
         });
