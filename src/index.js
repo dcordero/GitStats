@@ -47,34 +47,47 @@ function gitLog() {
     });
       
     child.on('close', function () {
-        var paragraphs = log.toString().split('\n\n');
-
-        for (let i = 0; i < paragraphs.length; i++) {
-            const paragraph = paragraphs[i];
-            const paragraphObject = parseParagraph(paragraph);
-            console.log(paragraphObject.name);
-
-            const diffObject = parseDiff(paragraphObject.diff);
-            console.log(diffObject);
-        }
+        const parsedGitStatsLogs = parseGitStatsLog(log);
+        console.log(parsedGitStatsLogs);
     });
 }
 
+function parseGitStatsLog(log) {
+    var paragraphs = log.toString().split('\n\n');
+
+    let gitStatsLogs = [];
+    for (let i = 0; i < paragraphs.length; i++) {
+        const paragraph = paragraphs[i];
+        
+        const paragraphObject = parseParagraph(paragraph);
+        const diffObject = parseDiff(paragraphObject.diff);
+
+        gitStatsLogs.push({
+            name: paragraphObject.name,
+            date: paragraphObject.date,
+            insertions: diffObject.insertions,
+            deletions: diffObject.deletions
+        });
+    }
+    return gitStatsLogs;
+}
+
 function parseParagraph(paragraph) {
-    let splitedParagraph = paragraph.split('\n'); 
+    const splitedParagraph = paragraph.split('\n'); 
+
     return {
-        name: splitedParagraph[0],
-        date: splitedParagraph[1],
-        diff: splitedParagraph[2]
+        name: splitedParagraph && splitedParagraph[0] || 'Anonymous',
+        date: splitedParagraph && splitedParagraph[1] || '',
+        diff: splitedParagraph && splitedParagraph[2] || ''
     };
 }
 
 function parseDiff(diff) {
-    let insertionsRegex = /(\d*)\sinsertion/;
-    let deletionsRegex = /(\d*)\sdeletion/;
+    const insertionsRegex = /(\d*)\sinsertion/;
+    const deletionsRegex = /(\d*)\sdeletion/;
 
-    let insertionMatches = insertionsRegex.exec(diff);
-    let deletionMatches = deletionsRegex.exec(diff);
+    const insertionMatches = insertionsRegex.exec(diff);
+    const deletionMatches = deletionsRegex.exec(diff);
 
     return {
         insertions: insertionMatches && insertionMatches[1] || 0,
