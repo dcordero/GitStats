@@ -1,0 +1,37 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    -webkit-app-region: drag;
+    background-color: #232323;
+}
+
+input[type="submit"],
+input[type="reset"],
+input[type="button"],
+input[type="text"],
+button,
+textarea {
+	-webkit-app-region: no-drag;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    -webkit-user-select: none;
+}
+
+.titleNavBar {
+    font-size: 2em;
+    text-align: center;
+    color: #008977;
+}
+
+.graph {
+    margin-top: 20px;
+}
+
+.close {
+    margin: 20px;
+    padding: 5px;
+}
