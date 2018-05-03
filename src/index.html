@@ -8,7 +8,17 @@
     </head>
     <body>
         <button class="close" id="close">Close</button>
+
+        <form id="selectProjectForm" class="initial" action="#">
+            Project path:<br>
+            <input id="projectPath" type="text" value="/path/of/the/project"><br>
+            <input type="submit" id="selectProject" value="OK">
+        </form>
+
+        <p class="initial loading" id="loading">Loading...</p>
+
         <canvas class="graph" id="graph"></canvas>
+
         <script src="index.js"></script>
     </body>
 </html>

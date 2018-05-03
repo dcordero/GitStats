@@ -9,7 +9,7 @@ let window;
 
 function createWindow () {
     window = new BrowserWindow({
-        width: 1400,
+        width: 1280,
         height: 800,
         frame: true
     });
@@ -21,7 +21,7 @@ function createWindow () {
     }));
 
     // Open the DevTools.
-    window.webContents.openDevTools()
+    //window.webContents.openDevTools();
 
     window.on('closed', () => {
         window = null;

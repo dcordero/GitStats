@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# macOS
+.DS_Store
+
+# Builds
+GitStats-darwin-x64/
