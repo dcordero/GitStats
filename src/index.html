@@ -9,11 +9,7 @@
     <body>
         <button class="close" id="close">Close</button>
 
-        <form id="selectProjectForm" class="initial" action="#">
-            Project path:<br>
-            <input id="projectPath" type="text" value="/path/of/the/project"><br>
-            <input type="submit" id="selectProject" value="OK">
-        </form>
+        <input id="selectProject" type="file" webkitdirectory directory multiple/>
 
         <p class="initial loading" id="loading">Loading...</p>
 

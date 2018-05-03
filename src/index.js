@@ -8,19 +8,15 @@ document.getElementById('close').addEventListener('click', function () {
     window.close();
 });
 
-document.getElementById('selectProject').addEventListener('click', function (event) {
-    event.preventDefault();
-
-    const selectProjectForm = document.getElementById('selectProjectForm');
-    selectProjectForm.style.visibility = 'hidden';
-
-    repoPath = document.getElementById("projectPath").value;
+const folder = document.getElementById('selectProject');
+folder.onchange = function() {
+    repoPath = folder.files[0].path;
 
     const loading = document.getElementById('loading');
     loading.style.visibility = 'visible';
 
     refreshData();
-});
+};
 
 function refreshData() {
 
@@ -59,7 +55,7 @@ function updateUIWithData(data) {
                     data: data
                 }
             ],
-            fill: true
+            fill: false
         },
         options: {
             responsive: true,
